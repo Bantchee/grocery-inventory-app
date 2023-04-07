@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const FoodItemschema = new Schema({
+const FoodItemSchema = new Schema({
     food: { type: Schema.Types.ObjectId, ref: 'Food Group'},
     location: {
         type: Schema.Types.ObjectId,
@@ -33,4 +33,4 @@ Food.virtual('url').get(function () {
 });
 
 // Export model
-module.exports = mongoose.model('Food', FoodSchema);
+module.exports = mongoose.model('FoodItem', FoodItemSchema);
