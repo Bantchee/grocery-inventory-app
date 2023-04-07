@@ -13,8 +13,8 @@ const FoodItemSchema = new Schema({
             { type: Schema.Types.ObjectId, ref: 'Farm'},
         ],
     },
-    arrival: { type: Date, default: Date.now },
-    expiration: { type: Date, default: Date.now },
+    arrival_date: { type: Date, default: Date.now },
+    expiration_date: { type: Date, default: Date.now },
     storage_type: {
         type: String,
         ref: "Storage Type",
