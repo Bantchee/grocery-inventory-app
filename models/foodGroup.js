@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 const FoodGroupSchema = new Schema({
     name: { type: String, required: true, maxLength: 100 },
-    description: { type: String, required: true },
 });
 
 // Virtual Properties
