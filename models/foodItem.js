@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const FoodItemSchema = new Schema({
-    food: { type: Schema.Types.ObjectId, ref: 'Food Group'},
+    food: { type: Schema.Types.ObjectId, ref: 'Food'},
     location: {
         type: Schema.Types.ObjectId,
         ref: "Location",
