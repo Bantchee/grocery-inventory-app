@@ -32,5 +32,14 @@ FoodItemSchema.virtual('url').get(function () {
     return `/home/fooditem/${this.id}`;
 });
 
+// Days till expiration (basic)
+FoodItemSchemma.virtual('lifespan').get(function() {
+    let years = this.expiration_date.getFullYears() - this.arrival_date.getFullYears();
+    let months = this.expiration_date.getMonth() - this.arrival_date.getMonth();
+    let days = this.expiration_date.getDate() - this.arrival_date.getDate();
+
+    return years * 365 + months * 30 + days;
+})
+
 // Export model
 module.exports = mongoose.model('FoodItem', FoodItemSchema);
