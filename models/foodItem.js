@@ -40,7 +40,13 @@ FoodItemSchema.virtual('lifespan').get(function() {
     let days = this.expiration_date.getDate() - this.arrival_date.getDate();
 
     return years * 365 + months * 30 + days;
-})
+});
+
+// Name of food
+FoodItemSchema.virtual('name').get(async function() {
+    const temp = await this.populate("food");
+    return temp.food;
+});
 
 // Export model
 module.exports = mongoose.model('FoodItem', FoodItemSchema);

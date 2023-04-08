@@ -1,0 +1,26 @@
+extends layout
+
+block content
+    h1 #{title}
+
+    p #[strong Address:] #{store.address}
+    p #[strong Inventory:] 
+        ul 
+            each item in store.inventory 
+                each food in foods
+                    if food.id==item.food
+                        li 
+                            a(href=item.url) 
+                                span   Name: #{food.name} - ID: #{item.item_id}   
+            else 
+                li There are no Items in Inventory 
+    p #[strong Inventory Size:] #{store.inventory_size}
+    p #[strong Manager:] #{store.manager}
+    p #[strong Start Date:] #{store.start_date}
+    p #[strong Store Age:] #{store.age}
+
+    hr
+    p
+        a(href=store.url+'/update') Update Store
+    p
+        a(href=store.url+'/delete') Delete Store

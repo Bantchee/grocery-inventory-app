@@ -1,4 +1,6 @@
 const Store = require("../models/store");
+const Food = require("../models/food");
+const async = require("async");
 
 // Display list of all Stores.
 exports.store_list = (req, res, next) => {
@@ -18,7 +20,38 @@ exports.store_list = (req, res, next) => {
   
 // Display detail page for a specific Store.
 exports.store_detail = (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: Store detail: ${req.params.id}`);
+    async.parallel({
+        store(callback) {
+            Store.findById(req.params.id).populate("inventory").exec(callback);
+        },
+        foods(callback) {
+            Food.find().exec(callback)
+        }
+        }, 
+        (err, results) => {
+            if(err) {
+                next(err);
+            }
+            if(results.store == null) {
+                // No results
+                
+                const err = new Error("Store not found");
+                err.status = 404;
+                return next(err);
+            }
+
+            for (item of results.store.inventory) {
+                item.populate('food');
+            }
+            // Successful, so render.
+            console.log('stuff');
+            res.render("store_detail", {
+                title: results.store.name,
+                store: results.store,
+                foods: results.foods,
+            });
+        }
+    );
 };
 
 // Display Store create form on GET.
