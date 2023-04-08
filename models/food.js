@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const Foodschema = new Schema({
+const FoodSchema = new Schema({
     name: { type: String, required: true, maxLength: 100 },
     description: { type: String, required: true},
     food_group: { type: Schema.Types.ObjectId, ref: 'Food Group'},
