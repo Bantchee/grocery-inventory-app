@@ -1,5 +1,6 @@
 const Store = require("../models/store");
 const Food = require("../models/food");
+const FoodItem = require("../models/foodItem");
 const async = require("async");
 
 // Display list of all Stores.
@@ -44,7 +45,6 @@ exports.store_detail = (req, res, next) => {
                 item.populate('food');
             }
             // Successful, so render.
-            console.log('stuff');
             res.render("store_detail", {
                 title: results.store.name,
                 store: results.store,
@@ -56,7 +56,23 @@ exports.store_detail = (req, res, next) => {
 
 // Display Store create form on GET.
 exports.store_create_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Store create GET");
+    // Get all food items, which we can use to add to store.
+    async.parallel(
+        {
+            foodItems(callback) {
+                FoodItem.find(callback).populate("food");
+            },
+        },
+        (err, results) => {
+            if(err) {
+                next(err);
+            }
+            res.render("store_form", {
+                title: "Create Store",
+                foodItems: results.foodItems,
+            });
+        }
+    )
 };
 
 // Handle Store create on POST.

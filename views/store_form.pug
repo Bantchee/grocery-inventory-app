@@ -1,0 +1,30 @@
+extend layout 
+
+block content 
+    h1=title 
+
+    form(method='POST' action='')
+        .form-group
+            label(for='name') Store Name: 
+            input#name.form-control(type='text' placeholder='Store Name' name='name', required=true value=(undefined===store ? '' : store.name))
+        .form-group
+            label(for='address') Address: 
+            input#address.form-control(type='text' placeholder='Address' name='address', required=true value=(undefined===store ? '' : store.address))
+        .form-group
+            label(for='manager') Manager: 
+            input#manager.form-control(type='text' placeholder='Manager' name='manager', required=true value=(undefined===store ? '' : store.manager))
+        .form-group
+            label(for='start_date') Start Date: 
+            input#manager.form-control(type='date' name='start_date', required=true value=(undefined===store ? '' : store.start_date))
+        .form-group 
+            label(for='start_date', style='display:block') Inventory:
+            each item in foodItems  
+                div(style='display: inline; padding-right:10px;')
+                    input.checkbox-input(type='checkbox', name='food_item', id=item._id, value=item._id, checked=item.checked )
+                    label(for=item._id) #{item.food.name} - #{item.item_id}
+        button.btn.btn-primary(type='submit') Submit
+
+    if errors 
+        ul 
+            for error in errors
+                li!=error.msg
