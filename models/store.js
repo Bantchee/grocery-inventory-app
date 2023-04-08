@@ -12,17 +12,17 @@ const StoreSchema = new Schema({
 
 // Virtual Properties
 // Store URL
-Store.virtual('url').get(function () {
+StoreSchema.virtual('url').get(function () {
     return `/home/store/${this.id}`;
 });
 
 // Store inventory size
-Store.virtual('inventory_size').get(function () {
+StoreSchema.virtual('inventory_size').get(function () {
     return this.inventory.length;
 });
 
 // Store age
-Store.virtual('age').get(function () {
+StoreSchema.virtual('age').get(function () {
     return (new Date).getFullYear - this.start_date.getFullYear;
 });
 

@@ -8,7 +8,7 @@ const FoodGroupSchema = new Schema({
 
 // Virtual Properties
 // Food Group URL
-FoodGroup.virtual("url").get(function() {
+FoodGroupSchema.virtual("url").get(function() {
     return `/home/foodgroup/${this.id}`;
 });
 

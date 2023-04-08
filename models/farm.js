@@ -12,17 +12,17 @@ const FarmSchema = new Schema({
 
 // Virtual Properties
 // Farm URL
-Farm.virtual('url').get(function () {
+FarmSchema.virtual('url').get(function () {
     return `/home/farm/${this.id}`;
 });
 
 // Farm inventory size
-Farm.virtual('inventory_size').get(function () {
+FarmSchema.virtual('inventory_size').get(function () {
     return this.inventory.length;
 });
 
 // Farm age
-Farm.virtual('age').get(function () {
+FarmSchema.virtual('age').get(function () {
     return (new Date).getFullYear - this.start_date.getFullYear;
 });
 
