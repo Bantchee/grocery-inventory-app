@@ -33,7 +33,7 @@ FoodItemSchema.virtual('url').get(function () {
 });
 
 // Days till expiration (basic)
-FoodItemSchemma.virtual('lifespan').get(function() {
+FoodItemSchema.virtual('lifespan').get(function() {
     let years = this.expiration_date.getFullYears() - this.arrival_date.getFullYears();
     let months = this.expiration_date.getMonth() - this.arrival_date.getMonth();
     let days = this.expiration_date.getDate() - this.arrival_date.getDate();

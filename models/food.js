@@ -10,7 +10,7 @@ const FoodSchema = new Schema({
 
 // Virtual Properties
 // Food URL
-Foodschema.virtual('url').get(function () {
+FoodSchema.virtual('url').get(function () {
     return `/home/food/${this.id}`;
 });
 
