@@ -13,7 +13,7 @@ const FarmSchema = new Schema({
 // Virtual Properties
 // Farm URL
 FarmSchema.virtual('url').get(function () {
-    return `/home/farm/${this.id}`;
+    return `/catalog/farm/${this.id}`;
 });
 
 // Farm inventory size

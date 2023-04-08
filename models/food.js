@@ -11,7 +11,7 @@ const FoodSchema = new Schema({
 // Virtual Properties
 // Food URL
 FoodSchema.virtual('url').get(function () {
-    return `/home/food/${this.id}`;
+    return `/catalog/food/${this.id}`;
 });
 
 // Export model

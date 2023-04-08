@@ -30,7 +30,7 @@ const FoodItemSchema = new Schema({
 // Virtual Properties
 // Food URL
 FoodItemSchema.virtual('url').get(function () {
-    return `/home/fooditem/${this.id}`;
+    return `/catalog/fooditem/${this.id}`;
 });
 
 // Days till expiration (basic)

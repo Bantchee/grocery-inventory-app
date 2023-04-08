@@ -13,7 +13,7 @@ const StoreSchema = new Schema({
 // Virtual Properties
 // Store URL
 StoreSchema.virtual('url').get(function () {
-    return `/home/store/${this.id}`;
+    return `/catalog/store/${this.id}`;
 });
 
 // Store inventory size

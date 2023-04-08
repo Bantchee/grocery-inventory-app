@@ -9,7 +9,7 @@ const FoodGroupSchema = new Schema({
 // Virtual Properties
 // Food Group URL
 FoodGroupSchema.virtual("url").get(function() {
-    return `/home/foodgroup/${this.id}`;
+    return `/catalog/foodgroup/${this.id}`;
 });
 
 // Export model
