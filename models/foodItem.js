@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const FoodItemSchema = new Schema({
     food: { type: Schema.Types.ObjectId, ref: 'Food'},
+    item_id: { type: String, require: true },
     location: {
         type: Schema.Types.ObjectId,
         ref: "Location",
