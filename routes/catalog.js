@@ -7,7 +7,7 @@ const store_controller = require('../controllers/storeController');
 const farm_controller = require('../controllers/farmController');
 const food_controller = require('../controllers/foodController');
 const food_item_controller = require('../controllers/foodItemController');
-const food_group_controller = require('../controllers/foddGroupController');
+const food_group_controller = require('../controllers/foodGroupController');
 
 
 /// INDEX ROUTES ///
