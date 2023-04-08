@@ -2,7 +2,18 @@ const Store = require("../models/store");
 
 // Display list of all Stores.
 exports.store_list = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Store list");
+    Store.find()
+    .sort([["name", "asc"]])
+    .exec(function (err, list_stores) {
+        if (err) {
+            return next(err);
+        }
+        // Successfull, so render
+        res.render("store_list", {
+            title: "Store List",
+            store_list: list_stores,
+        });
+    });
 };
   
 // Display detail page for a specific Store.

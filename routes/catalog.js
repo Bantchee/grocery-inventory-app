@@ -39,7 +39,7 @@ router.post("/store/:id/update", store_controller.store_update_post);
 router.get("/store/:id", store_controller.store_detail);
 
 // GET request for list of all Stores
-router.get("/store", store_controller.store_list);
+router.get("/stores", store_controller.store_list);
 
 /// FARM ROUTES ///
 
@@ -65,7 +65,7 @@ router.post("/farm/:id/update", farm_controller.farm_update_post);
 router.get("/farm/:id", farm_controller.farm_detail);
 
 // GET request for list of all Farms
-router.get("/farm", farm_controller.farm_list);
+router.get("/farms", farm_controller.farm_list);
 
 /// FOOD ROUTES ///
 
@@ -91,7 +91,7 @@ router.post("/food/:id/update", food_controller.food_update_post);
 router.get("/food/:id", food_controller.food_detail);
 
 // GET request for list of all Foods
-router.get("/food", food_controller.food_list);
+router.get("/foods", food_controller.food_list);
 
 /// FOOD ITEM ROUTES ///
 
@@ -117,7 +117,7 @@ router.post("/fooditem/:id/update", food_item_controller.food_item_update_post);
 router.get("/fooditem/:id", food_item_controller.food_item_detail);
 
 // GET request for list of all Food Items
-router.get("/fooditem", food_item_controller.food_item_list);
+router.get("/fooditems", food_item_controller.food_item_list);
 
 /// FOOD GROUP ROUTES ///
 
@@ -143,6 +143,6 @@ router.post("/foodgroup/:id/update", food_group_controller.food_group_update_pos
 router.get("/foodgroup/:id", food_group_controller.food_group_detail);
 
 // GET request for list of all Food Items
-router.get("/foodgroup", food_group_controller.food_group_list);
+router.get("/foodgroups", food_group_controller.food_group_list);
 
 module.exports = router;
