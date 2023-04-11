@@ -6,7 +6,6 @@ const index_controller = require('../controllers/indexController');
 const store_controller = require('../controllers/storeController');
 const farm_controller = require('../controllers/farmController');
 const food_controller = require('../controllers/foodController');
-const food_item_controller = require('../controllers/foodItemController');
 const food_group_controller = require('../controllers/foodGroupController');
 
 
@@ -92,32 +91,6 @@ router.get("/food/:id", food_controller.food_detail);
 
 // GET request for list of all Foods
 router.get("/foods", food_controller.food_list);
-
-/// FOOD ITEM ROUTES ///
-
-// GET request for creating a Food Item. NOTE This must come before routes that display Food Item (uses id).
-router.get("/fooditem/create", food_item_controller.food_item_create_get);
-
-// POST request for creating a Food Item.
-router.post("/fooditem/create", food_item_controller.food_item_create_post);
-
-// GET request to delete a Food Item
-router.get("/fooditem/:id/delete", food_item_controller.food_item_delete_get);
-
-// POST request to delete a Food Item
-router.post("/fooditem/:id/delete", food_item_controller.food_item_delete_post);
-
-// GET request to update a Food Item
-router.get("/fooditem/:id/update", food_item_controller.food_item_update_get);
-
-// POST request to update a Food Item
-router.post("/fooditem/:id/update", food_item_controller.food_item_update_post);
-
-// GET request for one Food Item
-router.get("/fooditem/:id", food_item_controller.food_item_detail);
-
-// GET request for list of all Food Items
-router.get("/fooditems", food_item_controller.food_item_list);
 
 /// FOOD GROUP ROUTES ///
 

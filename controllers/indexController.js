@@ -1,7 +1,6 @@
 const Store = require("../models/store");
 const Farm = require("../models/farm");
 const Food = require("../models/food");
-const FoodItem = require("../models/foodItem");
 const FoodGroup = require("../models/foodGroup");
 
 const async = require('async');
@@ -17,9 +16,6 @@ exports.index = (req, res, next) => {
             },
             food_count(callback) {
                 Food.countDocuments({}, callback);
-            },
-            food_item_count(callback) {
-                FoodItem.countDocuments({}, callback);
             },
             food_group_count(callback) {
                 FoodGroup.countDocuments({}, callback);

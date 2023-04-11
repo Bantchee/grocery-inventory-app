@@ -1,6 +1,5 @@
 const Store = require("../models/store");
 const Food = require("../models/food");
-const FoodItem = require("../models/foodItem");
 const async = require("async");
 
 // Display list of all Stores.
