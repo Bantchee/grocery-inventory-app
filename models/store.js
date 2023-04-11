@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const StoreSchema = new Schema({
     name: { type: String, required: true, maxLength: 100 },
     address: { type: String, required: true, maxLength: 100 },
-    inventory: [{ type: Schema.Types.ObjectId, ref: 'FoodItem'}],
+    inventory: [{ type: Schema.Types.ObjectId, ref: 'Food'}],
     manager: { type: String, require: true, maxLength: 100 },
     start_date: { type: Date, default: Date.now },
 });

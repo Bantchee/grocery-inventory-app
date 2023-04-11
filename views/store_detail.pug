@@ -6,12 +6,9 @@ block content
     p #[strong Address:] #{store.address}
     p #[strong Inventory:] 
         ul 
-            each item in store.inventory 
-                each food in foods
-                    if food.id==item.food
-                        li 
-                            a(href=item.url) 
-                                span   Name: #{food.name} - ID: #{item.item_id}   
+            each invFood in store.inventory 
+                li 
+                    a(href=invFood.url) #{invFood.name}  
             else 
                 li There are no Items in Inventory 
     p #[strong Inventory Size:] #{store.inventory_size}

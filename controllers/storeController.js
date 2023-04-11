@@ -25,9 +25,6 @@ exports.store_detail = (req, res, next) => {
         store(callback) {
             Store.findById(req.params.id).populate("inventory").exec(callback);
         },
-        foods(callback) {
-            Food.find().exec(callback)
-        }
         }, 
         (err, results) => {
             if(err) {
@@ -41,14 +38,10 @@ exports.store_detail = (req, res, next) => {
                 return next(err);
             }
 
-            for (item of results.store.inventory) {
-                item.populate('food');
-            }
             // Successful, so render.
             res.render("store_detail", {
                 title: results.store.name,
                 store: results.store,
-                foods: results.foods,
             });
         }
     );
@@ -59,8 +52,8 @@ exports.store_create_get = (req, res, next) => {
     // Get all food items, which we can use to add to store.
     async.parallel(
         {
-            foodItems(callback) {
-                FoodItem.find(callback).populate("food");
+            foods(callback) {
+                Food.find(callback);
             },
         },
         (err, results) => {
@@ -69,7 +62,7 @@ exports.store_create_get = (req, res, next) => {
             }
             res.render("store_form", {
                 title: "Create Store",
-                foodItems: results.foodItems,
+                foods: results.foods,
             });
         }
     )
