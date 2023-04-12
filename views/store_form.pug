@@ -17,7 +17,7 @@ block content
             label(for='start_date') Start Date: 
             input#manager.form-control(type='date' name='start_date', required=true value=(undefined===store ? '' : store.start_date))
         .form-group 
-            label(for='start_date', style='display:block') Inventory:
+            label(for='inventory', style='display:block') Inventory:
             each food in foods  
                 div(style='display: inline; padding-right:10px;')
                     input.checkbox-input(type='checkbox', name='food', id=food._id, value=food._id, checked=food.checked )
