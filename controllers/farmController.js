@@ -2,7 +2,18 @@ const Farm = require("../models/farm");
 
 // Display list of all Farms.
 exports.farm_list = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Farm list");
+    Farm.find()
+    .sort([["name", "asc"]])
+    .exec(function (err, list_farms) {
+        if(err) {
+            return next(err);
+        }
+        // Success, render store_list
+        res.render("farm_list", {
+            title: "Farm List",
+            farm_list: list_farms,
+        });
+    });
 };
   
 // Display detail page for a specific Farm.
