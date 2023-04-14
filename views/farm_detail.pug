@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    h1 #{title}
+
+    p #[strong Address:] #{farm.address}
+    p #[strong Inventory:] 
+        ul 
+            each invFood in farm.inventory 
+                li 
+                    a(href=invFood.url) #{invFood.name}  
+            else 
+                li There are no Items in Inventory 
+    p #[strong Inventory Size:] #{farm.inventory_size}
+    p #[strong Manager:] #{farm.manager}
+    p #[strong Start Date:] #{farm.start_date}
+    p #[strong Farm Age:] #{farm.age}
+
+    hr
+    p
+        a(href=farm.url+'/update') Update Store
+    p
+        a(href=farm.url+'/delete') Delete Store
