@@ -2,7 +2,18 @@ const FoodGroup = require("../models/foodGroup");
 
 // Display list of all FoodGroups.
 exports.food_group_list = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food Group list");
+    FoodGroup.find()
+    .sort([["name", "asc"]])
+    .exec(function (err, list_food_groups) {
+        if(err) {
+            return next(err);
+        }
+        // Success, so render
+        res.render("food_group_list", {
+            title: "Food Group List",
+            food_group_list: list_food_groups,
+        })
+    })
 };
   
 // Display detail page for a specific FoodGroup.
