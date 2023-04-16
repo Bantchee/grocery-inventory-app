@@ -2,7 +2,18 @@ const Food = require("../models/food");
 
 // Display list of all Foods.
 exports.food_list = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food list");
+    Food.find()
+    .sort([["name", "asc"]])
+    .exec(function (err, list_foods) {
+        if(err) {
+            return next(err);
+        }
+        // Successfull, so render
+        res.render("food_list", {
+            title: "Food List",
+            food_list: list_foods,
+        });
+    });
 };
   
 // Display detail page for a specific Food.
