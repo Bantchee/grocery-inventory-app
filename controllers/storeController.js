@@ -2,6 +2,7 @@ const Store = require("../models/store");
 const Food = require("../models/food");
 const async = require("async");
 const { body, validationResult } = require('express-validator');
+const store = require("../models/store");
 
 // Display list of all Stores.
 exports.store_list = (req, res, next) => {
@@ -157,12 +158,49 @@ exports.store_create_post = [
 
 // Display Store delete form on GET.
 exports.store_delete_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Store delete GET");
+    async.parallel({
+        store(callback) {
+            Store.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        if (results.store == null) {
+            // No results.
+            res.redirect("/catalog/stores");
+        }
+        // Successful, so render.
+        res.render("store_delete", {
+            title: "Delete Store",
+            store: results.store,
+        });
+    });
 };
 
 // Handle Store delete on POST.
 exports.store_delete_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Store delete POST");
+    async.parallel({
+        store(callback) {
+            Store.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        if (results.store == null) {
+            // No results.
+            res.redirect("/catalog/stores");
+        }
+        // Delete object and redirect to the list of Stores.
+        Store.findByIdAndRemove(req.body.storeid, (err) => {
+            if (err) {
+                return next(err);
+            }
+            // Success - go to book list
+            res.redirect("/catalog/stores");
+        });
+    });
 };
 
 // Display Store update form on GET.
