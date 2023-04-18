@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1 #{foodGroup.name}
+
+    hr
+    p
+        a(href=foodGroup.url+'/update') Update Store
+    p
+        a(href=foodGroup.url+'/delete') Delete Store

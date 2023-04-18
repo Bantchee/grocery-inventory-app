@@ -23,7 +23,7 @@ exports.farm_detail = (req, res, next) => {
         farm(callback) {
             Farm.findById(req.params.id).populate('inventory').exec(callback);
         },
-    }, (err, results)  => {
+    }, (err, results) => {
         if(err) {
             next(err);
         }

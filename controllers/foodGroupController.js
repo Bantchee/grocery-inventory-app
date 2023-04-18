@@ -1,4 +1,5 @@
 const FoodGroup = require("../models/foodGroup");
+const async = require("async");
 
 // Display list of all FoodGroups.
 exports.food_group_list = (req, res, next) => {
@@ -18,7 +19,26 @@ exports.food_group_list = (req, res, next) => {
   
 // Display detail page for a specific FoodGroup.
 exports.food_group_detail = (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: Food Group detail: ${req.params.id}`);
+    async.parallel({
+        foodGroup(callback) {
+            FoodGroup.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if(err) {
+            next(err);
+        }
+        if(results.foodGroup == null) {
+            // No results
+            const err = new Error("Food group not found");
+            err.status = 400;
+            return next(err);
+        }
+
+        // Successfull, render food group detail
+        res.render("food_group_detail", {
+            foodGroup: results.foodGroup,
+        })
+    })
 };
 
 // Display FoodGroup create form on GET.
