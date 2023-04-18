@@ -1,4 +1,5 @@
 const Food = require("../models/food");
+const async = require("async");
 
 // Display list of all Foods.
 exports.food_list = (req, res, next) => {
@@ -18,7 +19,27 @@ exports.food_list = (req, res, next) => {
   
 // Display detail page for a specific Food.
 exports.food_detail = (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: Food detail: ${req.params.id}`);
+    async.parallel({
+        food(callback) {
+            Food.findById(req.params.id).populate("food_group").exec(callback);
+        },
+    }, (err, results) => {
+        if(err) {
+            next(err);
+        }
+        if(results.food == null) {
+            // No results
+            const err = new Error("Food not found");
+            err.status = 400;
+            return next(err);
+        }
+
+        // Successfull, so render
+        res.render("food_detail", {
+            title: results.food.name,
+            food: results.food,
+        })
+    });
 };
 
 // Display Food create form on GET.

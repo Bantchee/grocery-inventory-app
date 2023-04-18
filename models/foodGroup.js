@@ -13,4 +13,4 @@ FoodGroupSchema.virtual("url").get(function() {
 });
 
 // Export model
-module.exports = mongoose.model("FoodGroup", FoodGroupSchema);
+module.exports = mongoose.model("Food Group", FoodGroupSchema);

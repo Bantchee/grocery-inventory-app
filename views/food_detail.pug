@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    h1 #{title}
+
+    p #[strong Description:] #{food.description}
+    p #[strong Food Group:] #{food.food_group.name}
+
+    hr
+    p
+        a(href=food.url+'/update') Update Store
+    p
+        a(href=food.url+'/delete') Delete Store
