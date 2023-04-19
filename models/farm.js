@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
@@ -23,12 +24,12 @@ FarmSchema.virtual('inventory_size').get(function () {
 
 // Farm age
 FarmSchema.virtual('age').get(function () {
-    return (new Date).getFullYear - this.start_date.getFullYear;
+    return parseInt((new Date).getFullYear()) - parseInt(this.start_date.getFullYear());
 });
 
 // Store Start Date as YYYY_MM_DD format
 FarmSchema.virtual("start_date_YYYY_MM_DD").get(function () {
-    return this.date_of_birth ?
+    return this.start_date ?
         DateTime.fromJSDate(this.start_date).toISODate() :
         '';
 });

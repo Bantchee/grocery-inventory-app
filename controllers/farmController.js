@@ -1,5 +1,6 @@
 const Farm = require("../models/farm");
 const Food = require("../models/food");
+const luxon = require("luxon");
 const async = require("async");
 const { body, validationResult } = require('express-validator');
 
@@ -201,10 +202,114 @@ exports.farm_delete_post = (req, res, next) => {
 
 // Display Farm update form on GET.
 exports.farm_update_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Farm update GET");
+    // Get farm and foods
+    async.parallel(
+        {
+            farm(callback) {
+                Farm.findById(req.params.id)
+                    .populate("inventory")
+                    .exec(callback);
+            },
+            foods(callback) {
+                Food.find().exec(callback);
+            }
+        },
+        (err, results) => {
+            if (err) {
+                return next(err);
+            }
+            
+            if (results.farm == null) {
+                // No results.
+                const err = new Error("Farm not found");
+                err.status = 404;
+                return next(err);
+            }
+
+            // Success.
+            // Mark our selected genres as checked.
+            for (const food of results.foods) {
+                for (const farmFood of results.farm.inventory) {
+                    if (food._id.toString() === farmFood._id.toString()) {
+                        food.checked = "true";
+                    }
+                }
+            }
+            res.render("farm_form", {
+                title: "Update Farm",
+                foods: results.foods,
+                farm: results.farm,
+            });
+        }
+    );
 };
 
 // Handle Farm update on POST.
-exports.farm_update_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Farm update POST");
+exports.farm_update_post = [
+    // Convert the foods to an array
+    (req, res, next) => {
+        if (!Array.isArray(req.body.food)) {
+            req.body.food = typeof req.body.food === "undefined" ? [] : [req.body.food];
+        }
+        next();
+    },
+
+    // Validate and sanitize fields
+    body("name")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('address')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('manager')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("start_date")
+        .optional({ checkFalsy: true })
+        .isISO8601()
+        .toDate(),
+    
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+        // Extract the calidation errors from a request.
+        const errors = validationResult(req);
+
+        // Form data is valid
+        // Create a Farm object with escaped and trimmed data
+        const farm = new Farm({
+            name: req.body.name,
+            address: req.body.address,
+            inventory: req.body.food,
+            manager: req.body.manager,
+            start_date: rightStartDate(req.body.start_date),
+            _id: req.params.id,
+        });
+
+        if(!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages
+            res.render("farm_form", {
+                title: "Update Farm",
+                farm,
+                errors: errors.array(),
+            });
+            return;
+        }
+        // Data from is valid. Update the record.
+        Farm.findByIdAndUpdate(req.params.id, farm, {}, (err, theFarm) => {
+            if(err) {
+                return next(err);
+            }
+    
+            // Successful: redirect to farm detail page.
+            res.redirect(theFarm.url);
+        });
+    },
+];
+
+const rightStartDate = (date) => {
+    luxDate = luxon.DateTime.fromJSDate(date).plus({ days: 1});
+    return luxDate;
 };
