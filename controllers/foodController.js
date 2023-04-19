@@ -163,10 +163,84 @@ exports.food_delete_post = (req, res, next) => {
 
 // Display Food update form on GET.
 exports.food_update_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food update GET");
+    // Get store and foods
+    async.parallel(
+        {
+            food(callback) {
+                Food.findById(req.params.id).populate("food_group").exec(callback);
+            },
+            foodGroups(callback) {
+                FoodGroup.find().exec(callback);
+            }
+        },
+        (err, results) => {
+            if (err) {
+                return next(err);
+            }
+            
+            if (results.food == null) {
+                // No results.
+                const err = new Error("Store not found");
+                err.status = 404;
+                return next(err);
+            }
+
+            // Success.
+            res.render("food_form", {
+                title: "Update Food",
+                food: results.food,
+                foodGroups: results.foodGroups,
+                selected_food_group: results.food.food_group._id,
+            });
+        }
+    );
 };
 
 // Handle Food update on POST.
-exports.food_update_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food update POST");
-};
+exports.food_update_post = [
+    // Validate and sanitize fields
+    body("name")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('description')
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body('foodGroup')
+        .escape(),
+    
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+        // Extract the calidation errors from a request.
+        const errors = validationResult(req);
+
+        // Form data is valid
+        // Create a food object with escaped and trimmed data
+        const food = new Food({
+            name: req.body.name,
+            description: req.body.description,
+            food_group: req.body.foodGroup,
+            _id: req.params.id,
+        });
+
+        if(!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages
+            res.render("food_form", {
+                title: "Update Food",
+                food,
+                errors: errors.array(),
+            });
+            return;
+        }
+        // Data from is valid. Update the record.
+        Food.findByIdAndUpdate(req.params.id, food, {}, (err, theFood) => {
+            if(err) {
+                return next(err);
+            }
+    
+            // Successful: redirect to food detail page.
+            res.redirect(theFood.url);
+        });
+    },
+];
