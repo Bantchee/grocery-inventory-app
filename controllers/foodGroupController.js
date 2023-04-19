@@ -78,12 +78,12 @@ exports.food_group_create_post = [
             return;
         }
 
-        // Data from form is valid. Save store.
+        // Data from form is valid. Save foodGroup.
         foodGroup.save((err) => {
             if (err) {
                 return next(err);
             }
-            // Successful: redirect to new store record.
+            // Successful: redirect to new foodGroup record.
             res.redirect(foodGroup.url);
         });
     },
@@ -125,7 +125,7 @@ exports.food_group_delete_post = (req, res, next) => {
             // No results.
             res.redirect("/catalog/foodGroups");
         }
-        // Delete object and redirect to the list of Stores.
+        // Delete object and redirect to the list of Food Groups.
         FoodGroup.findByIdAndRemove(req.body.foodgroupid, (err) => {
             if (err) {
                 return next(err);
@@ -138,10 +138,72 @@ exports.food_group_delete_post = (req, res, next) => {
 
 // Display FoodGroup update form on GET.
 exports.food_group_update_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food Group update GET");
+    // Get food group
+    async.parallel(
+        {
+            foodGroup(callback) {
+                FoodGroup.findById(req.params.id)
+                    .exec(callback);
+            },
+        },
+        (err, results) => {
+            if (err) {
+                return next(err);
+            }
+            
+            if (results.foodGroup == null) {
+                // No results.
+                const err = new Error("Food Group not found");
+                err.status = 404;
+                return next(err);
+            }
+
+            // Success.
+            res.render("food_group_form", {
+                title: "Update Food Group",
+                foodGroup: results.foodGroup,
+            });
+        }
+    );
 };
 
 // Handle FoodGroup update on POST.
-exports.food_group_update_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food Group update POST");
-};
+exports.food_group_update_post = [
+    // Validate and sanitize fields
+    body("name")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+        // Extract the calidation errors from a request.
+        const errors = validationResult(req);
+
+        // Form data is valid
+        // Create a food group object with escaped and trimmed data
+        const foodGroup = new FoodGroup({
+            name: req.body.name,
+            _id: req.params.id,
+        });
+
+        if(!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/errors messages
+            res.render("food_group_form", {
+                title: "Update Food Group",
+                foodGroup,
+                errors: errors.array(),
+            });
+            return;
+        }
+        // Data from is valid. Update the record.
+        FoodGroup.findByIdAndUpdate(req.params.id, foodGroup, {}, (err, theFoodGroup) => {
+            if(err) {
+                return next(err);
+            }
+    
+            // Successful: redirect to food group detail page.
+            res.redirect(theFoodGroup.url);
+        });
+    },
+];

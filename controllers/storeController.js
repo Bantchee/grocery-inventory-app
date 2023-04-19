@@ -242,9 +242,9 @@ exports.store_update_get = (req, res, next) => {
                 title: "Update Store",
                 foods: results.foods,
                 store: results.store,
-            })
+            });
         }
-    )
+    );
 };
 
 // Handle Store update on POST.
