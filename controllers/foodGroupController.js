@@ -91,12 +91,49 @@ exports.food_group_create_post = [
 
 // Display FoodGroup delete form on GET.
 exports.food_group_delete_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food Group delete GET");
+    async.parallel({
+        foodGroup(callback) {
+            FoodGroup.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        if (results.foodGroup == null) {
+            // No results.
+            res.redirect("/catalog/foodgroups");
+        }
+        // Successful, so render.
+        res.render("food_group_delete", {
+            title: "Delete Food Group",
+            foodGroup: results.foodGroup,
+        });
+    });
 };
 
 // Handle FoodGroup delete on POST.
 exports.food_group_delete_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food Group delete POST");
+    async.parallel({
+        foodGroup(callback) {
+            FoodGroup.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        if (results.foodGroup == null) {
+            // No results.
+            res.redirect("/catalog/foodGroups");
+        }
+        // Delete object and redirect to the list of Stores.
+        FoodGroup.findByIdAndRemove(req.body.foodgroupid, (err) => {
+            if (err) {
+                return next(err);
+            }
+            // Success - go to book list
+            res.redirect("/catalog/foodgroups");
+        });
+    });
 };
 
 // Display FoodGroup update form on GET.
