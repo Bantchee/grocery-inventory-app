@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 #{title}: #{farm.name}
+
+    p Do you really want to delete this Farm?
+
+        form(method='POST' action='')
+            div.form-group
+            input#farmid.form-control(type='hidden',name='farmid', required='true', value=farm._id )
+
+            button.btn.btn-primary(type='submit') Delete

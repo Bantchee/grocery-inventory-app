@@ -154,12 +154,49 @@ exports.farm_create_post = [
 
 // Display Farm delete form on GET.
 exports.farm_delete_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Farm delete GET");
+    async.parallel({
+        farm(callback) {
+            Farm.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        if (results.farm == null) {
+            // No results.
+            res.redirect("/catalog/farms");
+        }
+        // Successful, so render.
+        res.render("farm_delete", {
+            title: "Delete Farm",
+            farm: results.farm,
+        });
+    });
 };
 
 // Handle Farm delete on POST.
 exports.farm_delete_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Farm delete POST");
+    async.parallel({
+        farm(callback) {
+            Farm.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        if (results.farm == null) {
+            // No results.
+            res.redirect("/catalog/farms");
+        }
+        // Delete object and redirect to the list of Farms.
+        Farm.findByIdAndRemove(req.body.farmid, (err) => {
+            if (err) {
+                return next(err);
+            }
+            // Success - go to book list
+            res.redirect("/catalog/farms");
+        });
+    });
 };
 
 // Display Farm update form on GET.
