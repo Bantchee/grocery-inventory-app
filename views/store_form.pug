@@ -15,7 +15,7 @@ block content
             input#manager.form-control(type='text' placeholder='Manager' name='manager', required=true value=(undefined===store ? '' : store.manager))
         .form-group
             label(for='start_date') Start Date: 
-            input#manager.form-control(type='date' name='start_date', required=true value=(undefined===store ? '' : store.start_date))
+            input#manager.form-control(type='date' name='start_date', required=true value=(undefined===store ? '' : store.start_date_YYYY_MM_DD))
         .form-group 
             label(for='inventory', style='display:block') Inventory:
             each food in foods  

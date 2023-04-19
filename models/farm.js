@@ -26,5 +26,12 @@ FarmSchema.virtual('age').get(function () {
     return (new Date).getFullYear - this.start_date.getFullYear;
 });
 
+// Store Start Date as YYYY_MM_DD format
+FarmSchema.virtual("start_date_YYYY_MM_DD").get(function () {
+    return this.date_of_birth ?
+        DateTime.fromJSDate(this.start_date).toISODate() :
+        '';
+});
+
 // Export model
 module.exports = mongoose.model('Farm', FarmSchema);

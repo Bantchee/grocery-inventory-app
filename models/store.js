@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { DateTime } = require("luxon");
 
 const Schema = mongoose.Schema;
 
@@ -24,6 +25,13 @@ StoreSchema.virtual('inventory_size').get(function () {
 // Store age
 StoreSchema.virtual('age').get(function () {
     return parseInt((new Date).getFullYear()) - parseInt(this.start_date.getFullYear());
+});
+
+// Store Start Date as YYYY_MM_DD format
+StoreSchema.virtual("start_date_YYYY_MM_DD").get(function () {
+    return this.start_date ?
+        DateTime.fromJSDate(this.start_date).toISODate() :
+        '';
 });
 
 // Export model
