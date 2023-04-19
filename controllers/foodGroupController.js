@@ -1,5 +1,7 @@
 const FoodGroup = require("../models/foodGroup");
 const async = require("async");
+const { body, validationResult } = require('express-validator');
+const luxon = require('luxon');
 
 // Display list of all FoodGroups.
 exports.food_group_list = (req, res, next) => {
@@ -43,13 +45,49 @@ exports.food_group_detail = (req, res, next) => {
 
 // Display FoodGroup create form on GET.
 exports.food_group_create_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food Group create GET");
+    res.render("food_group_form", {
+        title: "Create Food Group",
+    });
 };
 
 // Handle FoodGroup create on POST.
-exports.food_group_create_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food Group create POST");
-};
+exports.food_group_create_post = [
+    // Validate and sanitize fields.
+    body("name", "Name must not be empty.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        // Create a Food object with escaped and trimmed data.
+        const foodGroup = new FoodGroup({
+            name: req.body.name,
+        });
+
+        if (!errors.isEmpty()) {
+            // There are errors. Render form again with sanitized values/error messages.
+            res.render("food_group_form", {
+                title: "Create Food Group",
+                foodGroup,
+                errors: errors.array(),
+            });
+            return;
+        }
+
+        // Data from form is valid. Save store.
+        foodGroup.save((err) => {
+            if (err) {
+                return next(err);
+            }
+            // Successful: redirect to new store record.
+            res.redirect(foodGroup.url);
+        });
+    },
+];
 
 // Display FoodGroup delete form on GET.
 exports.food_group_delete_get = (req, res, next) => {

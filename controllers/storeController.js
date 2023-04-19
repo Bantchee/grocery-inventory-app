@@ -224,7 +224,7 @@ exports.store_update_get = (req, res, next) => {
             
             if (results.store == null) {
                 // No results.
-                const err = new Error("Book not found");
+                const err = new Error("Store not found");
                 err.status = 404;
                 return next(err);
             }
