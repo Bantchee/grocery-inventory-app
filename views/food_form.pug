@@ -1,0 +1,24 @@
+extend layout 
+
+block content 
+    h1=title 
+
+    form(method='POST' action='')
+        .form-group
+            label(for='name') Name: 
+            input#name.form-control(type='text' placeholder='Food Name' name='name', required=true value=(undefined===food ? '' : food.name))
+        .form-group
+            label(for='address') Description: 
+            textarea#address.form-control(type='textarea' placeholder='Description' name='description', required=true value=(undefined===food ? '' : food.description))
+        .form-group 
+            label(for='foodGroup', style='display:block') Food Group:
+            select#foodGroup.form-control(type='select', placeholder='Select Food Group' name='foodGroup' required='true' )
+                - foodGroups.sort(function(a, b) {let textA = a.name.toUpperCase(); let textB = b.name.toUpperCase(); return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;});
+                each foodGroup in foodGroups  
+                    option(value=foodGroup._id, selected=(selected_food_group==foodGroup._id.toString() ? 'selected' : false)) #{foodGroup.name}
+        button.btn.btn-primary(type='submit') Submit
+
+    if errors 
+        ul 
+            for error in errors
+                li!=error.msg
