@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 #{title}: #{food.name}
+
+    p Do you really want to delete this Food?
+
+        form(method='POST' action='')
+            div.form-group
+            input#foodid.form-control(type='hidden',name='foodid', required='true', value=food._id )
+
+            button.btn.btn-primary(type='submit') Delete

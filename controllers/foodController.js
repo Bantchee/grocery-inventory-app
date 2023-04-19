@@ -123,12 +123,42 @@ exports.food_create_post = [
 
 // Display Food delete form on GET.
 exports.food_delete_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food delete GET");
+    async.parallel({
+        food(callback) {
+            Food.findById(req.params.id).exec(callback);
+        },
+    }, (err, results) => {
+        if (err) {
+            return next(err);
+        }
+        if (results.food == null) {
+            // No results.
+            res.redirect("/catalog/foods");
+        }
+        // Successful, so render.
+        res.render("food_delete", {
+            title: "Delete Food",
+            food: results.food,
+        });
+    });
 };
 
 // Handle Food delete on POST.
 exports.food_delete_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Food delete POST");
+    // There are errors. Render form again with sanitized values and error messages.
+    Food.find().exec(function (err, food) {
+        if (err) {
+            return next(err);
+        }
+        // Delete object and redirect to the list of Foods.
+        Food.findByIdAndRemove(req.body.foodid, (err) => {
+            if (err) {
+                return next(err);
+            }
+            // Success - go to food list
+            res.redirect("/catalog/foods");
+        });
+    });
 };
 
 // Display Food update form on GET.

@@ -197,7 +197,7 @@ exports.store_delete_post = (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            // Success - go to book list
+            // Success - go to store list
             res.redirect("/catalog/stores");
         });
     });
