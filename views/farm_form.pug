@@ -1,0 +1,30 @@
+extend layout 
+
+block content 
+    h1=title 
+
+    form(method='POST' action='')
+        .form-group
+            label(for='name') Farm Name: 
+            input#name.form-control(type='text' placeholder='Farm Name' name='name', required=true value=(undefined===farm ? '' : farm.name))
+        .form-group
+            label(for='address') Address: 
+            input#address.form-control(type='text' placeholder='Address' name='address', required=true value=(undefined===farm ? '' : farm.address))
+        .form-group
+            label(for='manager') Manager: 
+            input#manager.form-control(type='text' placeholder='Manager' name='manager', required=true value=(undefined===farm ? '' : farm.manager))
+        .form-group
+            label(for='start_date') Start Date: 
+            input#manager.form-control(type='date' name='start_date', required=true value=(undefined===farm ? '' : farm.start_date_YYYY_MM_DD))
+        .form-group 
+            label(for='inventory', style='display:block') Inventory:
+            each food in foods  
+                div(style='display: inline; padding-right:10px;')
+                    input.checkbox-input(type='checkbox', name='food', id=food._id, value=food._id, checked=food.checked )
+                    label(for=food._id) #{food.name}
+        button.btn.btn-primary(type='submit') Submit
+
+    if errors 
+        ul 
+            for error in errors
+                li!=error.msg

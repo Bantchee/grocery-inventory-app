@@ -1,5 +1,7 @@
 const Farm = require("../models/farm");
+const Food = require("../models/food");
 const async = require("async");
+const { body, validationResult } = require('express-validator');
 
 // Display list of all Farms.
 exports.farm_list = (req, res, next) => {
@@ -45,13 +47,110 @@ exports.farm_detail = (req, res, next) => {
 
 // Display Farm create form on GET.
 exports.farm_create_get = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Farm create GET");
+        // Get all food items, which we can use to add to farm
+        async.parallel(
+            {
+                foods(callback) {
+                    Food.find(callback);
+                },
+            },
+            (err, results) => {
+                if(err) {
+                    next(err);
+                }
+                res.render("farm_form", {
+                    title: "Create Farm",
+                    foods: results.foods,
+                });
+            }
+        )
 };
 
 // Handle Farm create on POST.
-exports.farm_create_post = (req, res, next) => {
-    res.send("NOT IMPLEMENTED: Farm create POST");
-};
+exports.farm_create_post = [
+    // Convert inventory to an array
+    (req, res, next) => {
+        if (!Array.isArray(req.body.food)) {
+            req.body.food = typeof req.body.food === "undefined" ? [] : [req.body.food];
+        }
+        next();
+    },
+    
+    // Validate and sanitize fields.
+    body("name", "Name must not be empty.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("address", "Address must not be empty.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("manager", "Manager must not be empty.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("start_date", "Invalid start date.")
+        .optional({ checkFalsy: true })
+        .isISO8601()
+        .toDate(),
+    body("food.*").escape(),
+
+    // Process request after validation and sanitization.
+    (req, res, next) => {
+        // Extract the validation errors from a request.
+        const errors = validationResult(req);
+
+        // Create a Store object with escaped and trimmed data.
+        const farm = new Farm({
+            name: req.body.name,
+            address: req.body.address,
+            inventory: req.body.food,
+            manager: req.body.manager,
+            start_date: req.body.start_date,
+        });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+        // Get all foods for form.
+        async.parallel(
+            {
+                foods(callback) {
+                    Food.find(callback);
+                },
+            },
+            (err, results) => {
+                if (err) {
+                    return next(err);
+                }
+
+                // Mark our selected foods as checked.
+                for (const food of results.foods) {
+                    if (farm.inventory.includes(food._id)) {
+                        food.checked = "true";
+                    }
+                }
+                res.render("farm_form", {
+                    title: "Create Farm",
+                    foods: results.foods,
+                    farm,
+                    errors: errors.array(),
+                });
+            }
+        );
+        return;
+    }
+
+    // Data from form is valid. Save farm.
+    farm.save((err) => {
+        if (err) {
+        return next(err);
+        }
+        // Successful: redirect to new farm record.
+        res.redirect(farm.url);
+    });
+    },
+];
 
 // Display Farm delete form on GET.
 exports.farm_delete_get = (req, res, next) => {
